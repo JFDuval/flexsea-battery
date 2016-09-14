@@ -22,7 +22,7 @@
 //****************************************************************************
 
 uint8 flag_tb_1ms = 0;
-//uint8 flag_tb10ms = 0;
+uint8 flag_tb_100ms = 0;
 uint16 led_period = LED_PERIOD_NORM;
 uint8 led_mode = LED_MODE_PWM;
 

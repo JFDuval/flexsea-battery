@@ -40,7 +40,7 @@
 //****************************************************************************
 
 //Returns the square of a uint8 value
-const uint16_t squared[256] = {0,1,4,9,16,25,36,49,64,81,100,121,144,
+const uint16 squared[256] = {0,1,4,9,16,25,36,49,64,81,100,121,144,
 	169,196,225,256,289,324,361,400,441,484,529,576,625,
 	676,729,784,841,900,961,1024,1089,1156,1225,1296,1369,1444,
 	1521,1600,1681,1764,1849,1936,2025,2116,2209,2304,2401,2500,2601,
@@ -60,14 +60,14 @@ const uint16_t squared[256] = {0,1,4,9,16,25,36,49,64,81,100,121,144,
 	48841,49284,49729,50176,50625,51076,51529,51984,52441,52900,53361,53824,54289,
 	54756,55225,55696,56169,56644,57121,57600,58081,58564,59049,59536,60025,60516,
 	61009,61504,62001,62500,63001,63504,64009,64516,65025};
-int16_t currentSamples[I2T_SAMPLES];
-uint8_t currentSampleIndex = 0;
+int16 currentSamples[I2T_SAMPLES];
+uint8 currentSampleIndex = 0;
 
 //****************************************************************************
 // Private Function Prototype(s)
 //****************************************************************************
 
-static uint8_t getCurrentSampleIndex(void);
+static uint8 getCurrentSampleIndex(void);
 static void resetCurrentSampleIndex(void);
 
 //****************************************************************************
@@ -76,7 +76,7 @@ static void resetCurrentSampleIndex(void);
 
 //Call this function every ms, and give it the latest current reading
 //Use a signed value, without offset
-void i2t_sample(int32_t lastCurrentRead)
+void i2t_sample(int32 lastCurrentRead)
 {
 	static int tb_div = 1;
 	uint8_t index = 0;
@@ -111,7 +111,7 @@ int i2t_compute(void)
 		//We use absolute values:
 		sampleAverage += abs(currentSamples[i]);
 	}
-	sampleAverage = (currentSamples >> I2T_SAMPLES_SHIFT);
+	sampleAverage = (sampleAverage >> I2T_SAMPLES_SHIFT);
 	resetCurrentSampleIndex();	//Ready for next cycle
 	
 	//Now we need to bring that value down to 8bits-ish, and saturate it:
@@ -160,7 +160,8 @@ int i2t_compute(void)
 
 static uint8_t getCurrentSampleIndex(void)
 {
-	return currentSampleIndex;
+	currentSampleIndex++;
+	return currentSampleIndex-1;
 }
 
 static void resetCurrentSampleIndex(void)

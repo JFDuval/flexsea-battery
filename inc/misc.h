@@ -21,7 +21,7 @@
 //****************************************************************************	
 	
 extern uint8 flag_tb_1ms;
-//extern uint8 flag_tb10ms = 0;
+extern uint8 flag_tb_100ms;
 extern uint16 led_period;
 extern uint8 led_mode;
 	

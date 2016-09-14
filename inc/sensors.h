@@ -54,6 +54,7 @@ void update_ezi2c_mem(void);
 //****************************************************************************	
 	
 extern int16 adc_res[ADC_CHANNELS];
+extern uint8 currentLimit;
 	
 #endif	//INC_SENSORS_H
 	

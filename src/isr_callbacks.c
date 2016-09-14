@@ -28,7 +28,7 @@
 CY_ISR(isr_t1_Interrupt_Callback)
 {
 	static uint16 cnt = 0;
-	static uint16 timebase_10ms = 0;
+	static uint16 timebase_100ms = 0;
 
 	//Clear interrupt
 	Timer_1_ReadStatusRegister();
@@ -51,15 +51,13 @@ CY_ISR(isr_t1_Interrupt_Callback)
 	//1ms timebase:
 	flag_tb_1ms = 1;
 
-	/*
-	//10ms timebase:
-	timebase_10ms++;
-	if(timebase_10ms >= 10)
+	//100ms timebase:
+	timebase_100ms++;
+	if(timebase_100ms >= 100)
 	{
-		timebase_10ms = 0;
-		flag_tb10ms = 1;
+		timebase_100ms = 0;
+		flag_tb_100ms = 1;
 	}
-	*/
 }
 
 //Sequencing ADC ISR:

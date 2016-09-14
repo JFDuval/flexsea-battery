@@ -17,6 +17,8 @@
 // Variable(s)
 //****************************************************************************
 
+volatile int16 testCurrent = 10500;
+
 //****************************************************************************
 // Function(s)
 //****************************************************************************
@@ -46,11 +48,24 @@ int main()
 			//Update shared memory:
 			update_ezi2c_mem();
 			
+			//Sample current (I2t limit):
+			i2t_sample(flexsea_batt.current);
+			//i2t_sample(testCurrent);
+			
 			//Update error flags:
 			board_status();
 			
 			//This state-machine defines the behaviour of the board
 			battery_board_fsm();
+		}
+		
+		//Every 100ms:
+		if(flag_tb_100ms)
+		{
+			flag_tb_100ms = 0;
+			
+			//Is the current in range?
+			currentLimit = i2t_compute();
 		}
 		      
 		//EZI2C Write complete
@@ -58,7 +73,7 @@ int main()
         {
 			//...
 			i2c_flag = 1;
-			i2c_flag = 0;			
+			i2c_flag = 0;	
         }
     }
 }

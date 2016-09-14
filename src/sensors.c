@@ -20,6 +20,7 @@
 
 int16 adc_res[ADC_CHANNELS];
 int16 adc_zero = 1024;	
+uint8 currentLimit = RET_I2T_NORMAL;
 
 //****************************************************************************
 // Function(s)

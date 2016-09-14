@@ -222,25 +222,26 @@ uint8 board_status(void)
 		flexsea_batt.status_byte &= (~STATUS_VOLT_HIGH);
 	}
 	
-    //Current in range?
-	if(flexsea_batt.current <= (-CURRENT_MAX))
+    //Current in range? Warning zone
+	if(currentLimit == RET_I2T_WARNING)
 	{
 		error++;
-		flexsea_batt.status_byte |= STATUS_CURRENT_NEG;
+		flexsea_batt.status_byte |= STATUS_CURRENT_WARN;
 	}
 	else
 	{
-		flexsea_batt.status_byte &= (~STATUS_CURRENT_NEG);
+		flexsea_batt.status_byte &= (~STATUS_CURRENT_WARN);
 	}
 	
-	if(flexsea_batt.current >= CURRENT_MAX)
+	//Current in range? Over the limit
+	if(currentLimit == RET_I2T_LIMIT)
 	{
 		error++;
-		flexsea_batt.status_byte |= STATUS_CURRENT_POS;
+		flexsea_batt.status_byte |= STATUS_CURRENT_LIM;
 	}
 	else
 	{
-		flexsea_batt.status_byte &= (~STATUS_CURRENT_POS);
+		flexsea_batt.status_byte &= (~STATUS_CURRENT_LIM);
 	}
 	
 	//More checks...

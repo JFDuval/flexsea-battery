@@ -66,8 +66,8 @@ uint8 board_status(void);
 //Status byte flags:
 #define STATUS_VOLT_LOW			1
 #define STATUS_VOLT_HIGH		2
-#define STATUS_CURRENT_NEG		4
-#define STATUS_CURRENT_POS		8
+#define STATUS_CURRENT_WARN		4
+#define STATUS_CURRENT_LIM		8
 
 //FSM states:
 #define FSM_STATE_STARTUP       0
