@@ -26,6 +26,8 @@ struct flexsea_batt_s
 	int16 current;
 	int8 temperature;
 	uint8 status_byte;
+	
+	uint16 voltage_filtered;	
 };
 	
 //****************************************************************************

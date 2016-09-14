@@ -202,7 +202,7 @@ uint8 board_status(void)
 	uint8 error = 0, status = BOARD_STATUS_NA;
 	
     //Voltage in range?
-	if(flexsea_batt.voltage <= VOLTAGE_MIN)
+	if(flexsea_batt.voltage_filtered <= VOLTAGE_MIN)
 	{
 		error++;
 		flexsea_batt.status_byte |= STATUS_VOLT_LOW;
@@ -212,7 +212,7 @@ uint8 board_status(void)
 		flexsea_batt.status_byte &= (~STATUS_VOLT_LOW);
 	}
 	
-	if(flexsea_batt.voltage >= VOLTAGE_MAX)
+	if(flexsea_batt.voltage_filtered >= VOLTAGE_MAX)
 	{
 		error++;
 		flexsea_batt.status_byte |= STATUS_VOLT_HIGH;
@@ -225,7 +225,7 @@ uint8 board_status(void)
     //Current in range? Warning zone
 	if(currentLimit == RET_I2T_WARNING)
 	{
-		error++;
+		//error++;	//No error for a warning, but we should notify the user
 		flexsea_batt.status_byte |= STATUS_CURRENT_WARN;
 	}
 	else

@@ -26,6 +26,7 @@ uint8 currentLimit = RET_I2T_NORMAL;
 // Function(s)
 //****************************************************************************
 
+//Battery voltage (in mV) - instantaneous
 uint16 read_vb_mv(void)
 {
 	uint32 tmp1 = 0;
@@ -35,7 +36,57 @@ uint16 read_vb_mv(void)
 	tmp2 = 11.729 * ((tmp1 / 2048) + 958.8);
 	
 	flexsea_batt.voltage = (uint16)tmp2;
+	
+	//Get filtered version:
+	filter_vb_mv(flexsea_batt.voltage);
+	
 	return flexsea_batt.voltage;
+}
+
+//Moving average filter.
+uint16 filter_vb_mv(uint16 newVal)
+{
+	int i = 0, sum = 0;
+	static int idx = 0, iter = 0;
+	static uint16 vbBuffer[VB_SAMPLES];
+	uint16 retVal = 0;
+	
+	//We do not want to get false values before the buffer is filled:
+	if(iter < VB_SAMPLES)
+	{
+		//First time?
+		if(iter == 0)
+		{
+			//Initialize array:
+			for(idx = 0; idx < VB_SAMPLES; idx++)
+			{
+				vbBuffer[idx] = 0;
+			}
+		}
+		
+		vbBuffer[iter] = newVal;
+		retVal = newVal; //Returns latest val (no filter)
+		iter++;		
+	}
+	else
+	{
+		//Normal operation - buffer is full:
+		
+		//Shift
+		for(i = 1; i < VB_SAMPLES; i++)
+		{
+			vbBuffer[i-1] = vbBuffer[i];
+			sum += vbBuffer[i];
+		}
+		vbBuffer[VB_SAMPLES-1] = newVal;
+		
+		//Avg:
+		sum += newVal;
+		retVal = sum >> VB_SHIFT;	//Filtered value
+	}
+	
+	flexsea_batt.voltage_filtered = retVal;
+	return retVal;
 }
 
 int16 read_ib_ma(void)

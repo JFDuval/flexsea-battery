@@ -26,6 +26,7 @@
 //****************************************************************************
 
 uint16 read_vb_mv(void);
+uint16 filter_vb_mv(uint16 newVal);
 int16 read_ib_ma(void);
 int8 read_temp_celsius(void);
 void update_ezi2c_mem(void);
@@ -45,9 +46,13 @@ void update_ezi2c_mem(void);
 //Limits:
 #define VOLTAGE_MIN				15000
 #define VOLTAGE_MAX				52000
-#define CURRENT_MAX				10000
-#define TEMP_MAX				
+//See I2t-current-limit for the current limit
+#define TEMP_MAX				85
 //Note: should be modified for your application!
+
+//Filters:
+#define VB_SAMPLES				32
+#define VB_SHIFT				5
 
 //****************************************************************************
 // Shared Variable(s):
