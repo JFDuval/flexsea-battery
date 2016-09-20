@@ -1,6 +1,6 @@
 /****************************************************************************
 	[Project] FlexSEA: Flexible & Scalable Electronics Architecture
-	[Sub-project] 'Battery' Battery monitoring & protection
+	[Sub-project] 'battery': Battery Protection & Monitoring
 	Copyright (C) 2016 Dephy, Inc. <http://dephy.com/>
 
 	This program is free software: you can redistribute it and/or modify

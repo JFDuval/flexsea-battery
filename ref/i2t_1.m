@@ -113,7 +113,7 @@ CURR_LIMIT = 15000;         %mA
 Limit = (TIME_AT_LIMIT_CURR / dt) * ( (CURR_LIMIT/SCALE)^2 - I2T_LEAK )
 
 CURR = 11000:1000:30000;
-tmp = (CURR./SCALE).^2
+tmp = (CURR./SCALE).^2;
 time = (Limit * dt) ./ ( tmp - I2T_LEAK );
 figure()
 plot(CURR, time)
