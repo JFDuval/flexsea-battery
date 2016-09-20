@@ -38,8 +38,6 @@
 // Variable(s)
 //****************************************************************************
 
-//volatile int16 testCurrent = 10500;
-
 //****************************************************************************
 // Function(s)
 //****************************************************************************
@@ -50,6 +48,9 @@ int main()
 	
 	//Initialize and start peripherals:
     init_peripherals();
+	
+	//Test code:
+	test_vb_filter_blocking();
 	
 	//Enable global interrupts
 	CyGlobalIntEnable;
@@ -71,7 +72,6 @@ int main()
 			
 			//Sample current (I2t limit):
 			i2t_sample(flexsea_batt.current);
-			//i2t_sample(testCurrent);
 			
 			//Update error flags:
 			board_status();

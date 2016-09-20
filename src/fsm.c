@@ -164,7 +164,6 @@ void battery_board_fsm(void)
 				//Any flag will trigger a power OFF
 				fsm_state = FSM_STATE_OFF;
 			}
-			//ToDo: add filters! This is quick & dirty code.
             
             break;
         

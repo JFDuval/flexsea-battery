@@ -52,6 +52,8 @@ int16 read_ib_ma(void);
 int8 read_temp_celsius(void);
 void update_ezi2c_mem(void);
 
+void test_vb_filter_blocking(void);
+
 //****************************************************************************
 // Definition(s):
 //****************************************************************************

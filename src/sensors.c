@@ -142,3 +142,43 @@ void update_ezi2c_mem(void)
 	ezI2Cbuf[MEM_R_CURRENT_LSB] = tmp1;
 	ezI2Cbuf[MEM_R_TEMP] = flexsea_batt.temperature;
 }
+
+//****************************************************************************
+// Test code
+//****************************************************************************
+
+//Use this function to test the filter's behaviour and properties:
+#define TEST_DATA_LEN	32
+#define DEFAULT_VAL		20000	//mV
+#define MOD_FACTOR		30
+void test_vb_filter_blocking(void)
+{
+	uint16 loopCounter = 0, index = 0, actualVal = 0;
+	//Latch board:
+	SW_PSOC_Write(OUTPUT_ON);
+	RED_LED_PWM(MAX_PWM);
+	
+	//Test data:
+	uint16 testData[TEST_DATA_LEN];
+	int i = 0;
+	uint16_t mod = 0;
+	for(i = 0; i < TEST_DATA_LEN; i++)
+	{
+		if(i < TEST_DATA_LEN)
+			mod = MOD_FACTOR*i;
+		else
+			mod = MOD_FACTOR*(TEST_DATA_LEN-i);
+			
+		testData[i] = DEFAULT_VAL + mod;
+	}
+	
+	//Feed it to the function under test:
+	while(1)
+	{
+		actualVal = testData[index];
+		filter_vb_mv(actualVal);
+		index++;
+		index %= TEST_DATA_LEN;
+		loopCounter++;
+	}	
+}
