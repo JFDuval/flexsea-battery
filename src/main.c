@@ -50,7 +50,7 @@ int main()
     init_peripherals();
 	
 	//Test code:
-	test_vb_filter_blocking();
+	//test_vb_filter_blocking();
 	
 	//Enable global interrupts
 	CyGlobalIntEnable;

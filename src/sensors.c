@@ -59,7 +59,9 @@ uint16 read_vb_mv(void)
 	flexsea_batt.voltage = (uint16)tmp2;
 	
 	//Get filtered version:
-	filter_vb_mv(flexsea_batt.voltage);
+	//filter_vb_mv(flexsea_batt.voltage);	//Moving average
+	//Butterworth 1st order 2.5Hz:
+	flexsea_batt.voltage_filtered = filter_vb_mv(flexsea_batt.voltage);
 	
 	return flexsea_batt.voltage;
 }
@@ -143,11 +145,37 @@ void update_ezi2c_mem(void)
 	ezI2Cbuf[MEM_R_TEMP] = flexsea_batt.temperature;
 }
 
+//Takes the latest measurement, and returns the latest output
+int lpfVoltage(int newVal)
+{
+	static int input[2] = {0,0};
+	static int output[2] = {0,0};
+	
+	//Shift arrays:
+	input[1] = input[0];
+	output[1] = output[0];
+	input[0] = newVal;
+	
+	//Calculate latest value:
+	filt_array(input, output);
+	
+	//Return value:
+	return (output[0] >> LPF_PARAM_3);
+}
+
+//Butterworth LPF:
+void filt_array(int *raw,int *filt)
+{
+    filt[0] = (int)(((LPF_PARAM_1*(raw[0]+raw[1]))
+              +LPF_PARAM_2*filt[1]+LPF_PARAM_4)>>LPF_PARAM_3);
+}
+
 //****************************************************************************
 // Test code
 //****************************************************************************
 
-//Use this function to test the filter's behaviour and properties:
+//Use this function to test the filter's behaviour and properties
+//Moving average only
 #define TEST_DATA_LEN	32
 #define DEFAULT_VAL		20000	//mV
 #define MOD_FACTOR		30

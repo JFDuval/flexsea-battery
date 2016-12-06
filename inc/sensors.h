@@ -52,6 +52,9 @@ int16 read_ib_ma(void);
 int8 read_temp_celsius(void);
 void update_ezi2c_mem(void);
 
+int lpfVoltage(int newVal);
+void filt_array(int *raw,int *filt);
+
 void test_vb_filter_blocking(void);
 
 //****************************************************************************
@@ -76,6 +79,13 @@ void test_vb_filter_blocking(void);
 //Filters:
 #define VB_SAMPLES				32
 #define VB_SHIFT				5
+
+//Filters raw signal at 2.5Hz cutoff if sampled at 1kHz
+//filt is 1024 x raw in order to maintain precision
+#define LPF_PARAM_1				9791	//b[0]
+#define LPF_PARAM_2				1005	//abs(a[1]
+#define LPF_PARAM_3				10		//2^LPF_PARAM_3 = a[0]
+#define LPF_PARAM_4				512		//Rounding
 
 //****************************************************************************
 // Shared Variable(s):
