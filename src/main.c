@@ -61,7 +61,7 @@ int main()
 		if(flag_tb_1ms)
 		{
 			flag_tb_1ms = 0;
-			
+
 			//Read sensors & convert data:
 			read_vb_mv();
 			read_ib_ma();
