@@ -122,10 +122,15 @@ int16 read_ib_ma(void)
 	return flexsea_batt.current;
 }
 
-//ToDo: confirm measurement, seems wrong (62C on my desk...)
+//Temperature reading, in celcius:
 int8 read_temp_celsius(void)
 {
-	flexsea_batt.temperature = (int8) DieTemp_1_CountsTo_Celsius((int32)adc_res[ADC_TEMP]);
+	/* We need a correction, as we are using a 3V3 ref and not the expected 
+	1.024V. 3.3/1.024 = 3.22. 26/8 = 3.25, close enough.*/
+	
+	int32_t adcCountCorrected = 26*((int32)adc_res[ADC_TEMP]);
+	adcCountCorrected = adcCountCorrected >> 3;
+	flexsea_batt.temperature = (int8) DieTemp_1_CountsTo_Celsius(adcCountCorrected);
 	return flexsea_batt.temperature;
 }
 
