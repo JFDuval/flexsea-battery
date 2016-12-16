@@ -116,8 +116,17 @@ void battery_board_fsm(void)
             //Latch output:
             SW_PSOC_Write(OUTPUT_ON);
             
-            //Green LED fade on & off:
-			rgbLedSet(0, rgbLedGetFade(), 0);
+            //LED fade on & off:
+			if(newDataLED)
+			{
+				//Green when comm is active:
+				rgbLedSet(0, rgbLedGetFade(), 0);
+			}
+			else
+			{
+				//Blue otherwise
+				rgbLedSet(0, 0, rgbLedGetFade());
+			}
             
             //Is the user pressing on the button?
             if(button_pressed())
