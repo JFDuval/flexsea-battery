@@ -69,4 +69,10 @@
 #define BYTES_TO_UINT16(b0,b1)			(((uint16_t)b0 << 8) + \
 										((uint16_t)b1))
 	
+//Minimalist version of user.h:
+//Enable/Disable sub-modules:
+
+#define USE_I2C1			//Shared memory (EZI2C)
+#define USE_I2T_LIMIT		//I2t current limit
+	
 #endif // MAIN_H_

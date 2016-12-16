@@ -43,8 +43,6 @@
 //****************************************************************************	
 	
 extern volatile uint8 t1_time_share, t1_new_value;
-extern uint16 led_period;
-extern uint8 led_mode;
 	
 //****************************************************************************
 // Public Function Prototype(s):

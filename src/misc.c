@@ -44,8 +44,6 @@
 //****************************************************************************
 
 volatile uint8 t1_time_share = 0, t1_new_value = 0;
-uint16 led_period = LED_PERIOD_NORM;
-uint8 led_mode = LED_MODE_PWM;
 
 //****************************************************************************
 // Public Function(s)
@@ -73,10 +71,12 @@ void init_peripherals(void)
     LED_B_Write(LED_OFF);
 	rgbLedSet(0,0,0);	
     
+	#ifdef USE_I2C1
 	//EZI2C:	
 	I2C_1_EzI2CSetBuffer1(EZI2C_BUF_SIZE, EZI2C_WBUF_SIZE, ezI2Cbuf);
 	init_ezI2Cbuf();
 	I2C_1_Start();
+	#endif
 }
 
 //From 1 uint32 to 4 uint8

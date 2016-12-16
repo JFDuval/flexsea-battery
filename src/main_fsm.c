@@ -86,7 +86,7 @@ void main_fsm_case_3(void)
 	{
 		#ifdef USE_I2T_LIMIT
 		//Is the current in range?
-		//currentLimit = i2t_compute();
+		currentLimit = i2t_compute();
 		#endif	//USE_I2T_LIMIT
 	} 
 }
@@ -108,7 +108,7 @@ void main_fsm_case_5(void)
 //Case 6: 
 void main_fsm_case_6(void)
 {
-//UI RGB LED:	
+	//UI RGB LED:	
 	rgbLedRefreshFade();
 }
 

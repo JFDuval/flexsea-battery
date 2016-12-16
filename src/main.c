@@ -25,7 +25,7 @@
 *****************************************************************************
 	[Change log] (Convention: YYYY-MM-DD | author | comment)
 	* 2016-09-20 | jfduval | Added proper header
-	*
+	* 2016-12-16 | jfduval | Integrated main_fsm
 ****************************************************************************/
 
 //****************************************************************************
@@ -113,47 +113,5 @@ int main()
 			//Asynchronous code goes here.
 			main_fsm_asynchronous();			
 		}
-		
-		/*
-        //Every millisecond:		
-		if(flag_tb_1ms)
-		{
-			flag_tb_1ms = 0;
-
-			//Read sensors & convert data:
-			read_vb_mv();
-			read_ib_ma();
-			read_temp_celsius();
-			
-			//Update shared memory:
-			update_ezi2c_mem();
-			
-			//Sample current (I2t limit):
-			i2t_sample(flexsea_batt.current);
-			
-			//Update error flags:
-			board_status();
-			
-			//This state-machine defines the behaviour of the board
-			battery_board_fsm();
-		}
-		
-		//Every 100ms:
-		if(flag_tb_100ms)
-		{
-			flag_tb_100ms = 0;
-			
-			//Is the current in range?
-			currentLimit = i2t_compute();
-		}
-		      
-		//EZI2C Write complete
-        if (0u != (I2C_1_EzI2CGetActivity() & I2C_1_EZI2C_STATUS_WRITE1))
-        {
-			//...
-			i2c_flag = 1;
-			i2c_flag = 0;	
-        }
-		*/
     }
 }
