@@ -189,7 +189,7 @@ void test_vb_filter_blocking(void)
 	uint16 loopCounter = 0, index = 0, actualVal = 0;
 	//Latch board:
 	SW_PSOC_Write(OUTPUT_ON);
-	RED_LED_PWM(MAX_PWM);
+	rgbLedSet(0, MAX_PWM, 0);
 	
 	//Test data:
 	uint16 testData[TEST_DATA_LEN];

@@ -38,11 +38,13 @@
 #include <project.h>
 #include <stdlib.h>
 #include "isr_callbacks.h"
+#include "main_fsm.h"
 #include "misc.h"
 #include "sensors.h"
 #include "comm.h"
 #include "fsm.h"
 #include "i2t-current-limit.h"
+#include "rgb_led.h"
 
 //****************************************************************************
 // Prototype(s):

@@ -43,20 +43,78 @@
 //****************************************************************************
 
 int main()
-{
-	uint8 i2c_flag = 0;
-	
+{	
 	//Initialize and start peripherals:
     init_peripherals();
 	
 	//Test code:
 	//test_vb_filter_blocking();
+	//rgbLedRefresh_testcode_blocking();
 	
 	//Enable global interrupts
 	CyGlobalIntEnable;
 	
     while(1)
     {
+		if(t1_new_value == 1)
+		{
+			//If the time share slot changed we run the timing FSM. 
+			//'t1_new_value' updates at 10kHz, each slot at 1kHz.			
+            
+            t1_new_value = 0;            
+			
+			//Timing FSM:
+			switch(t1_time_share)
+			{
+				case 0:                    
+					main_fsm_case_0();	
+					break;				
+				case 1:       
+					main_fsm_case_1();	
+					break;				
+				case 2:
+					main_fsm_case_2();
+					break;
+				case 3:				
+					main_fsm_case_3();					
+					break;
+				case 4:
+					main_fsm_case_4();			
+					break;				
+				case 5:
+					main_fsm_case_5();			
+					break;					
+				case 6:
+					main_fsm_case_6();						
+					break;				
+				case 7:					
+					main_fsm_case_7();	
+					break;				
+				case 8:
+					main_fsm_case_8();					
+					break;
+				case 9:
+					main_fsm_case_9();	
+					break;				
+				default:
+					break;
+			}
+			
+			//Increment value, limits to 0-9
+        	t1_time_share++;
+	        t1_time_share %= 10;
+			
+			//The code below is executed every 100us, after the previous slot. 
+			//Keep it short! (<10us if possible)
+			main_fsm_10kHz();         
+		}
+		else
+		{
+			//Asynchronous code goes here.
+			main_fsm_asynchronous();			
+		}
+		
+		/*
         //Every millisecond:		
 		if(flag_tb_1ms)
 		{
@@ -96,5 +154,6 @@ int main()
 			i2c_flag = 1;
 			i2c_flag = 0;	
         }
+		*/
     }
 }

@@ -43,8 +43,7 @@
 // Variable(s)
 //****************************************************************************
 
-uint8 flag_tb_1ms = 0;
-uint8 flag_tb_100ms = 0;
+volatile uint8 t1_time_share = 0, t1_new_value = 0;
 uint16 led_period = LED_PERIOD_NORM;
 uint8 led_mode = LED_MODE_PWM;
 
@@ -68,16 +67,11 @@ void init_peripherals(void)
     Opamp_0_Start();
     Opamp_1_Start();
 
-    //PWM_1 (Green LED)
-    PWM_1_Start();
-    PWM_1_WriteCompare(0);  //Off
-    
-    //PWM_2 (Red LED)
-    PWM_2_Start();
-    PWM_2_WriteCompare(0);  //Off
-    
     //LEDs start at 0:
-    LED_B_Write(0);
+	LED_R_Write(LED_OFF);
+	LED_G_Write(LED_OFF);
+    LED_B_Write(LED_OFF);
+	rgbLedSet(0,0,0);	
     
 	//EZI2C:	
 	I2C_1_EzI2CSetBuffer1(EZI2C_BUF_SIZE, EZI2C_WBUF_SIZE, ezI2Cbuf);
@@ -99,4 +93,34 @@ void uint16_to_bytes(uint32_t x, uint8_t *b0, uint8_t *b1)
 {
 	*b0 = (uint8_t) ((x >> 8) & 0xFF);
 	*b1 = (uint8_t) (x & 0xFF);
+}
+
+//Call this function in the 1kHz FSM. It will return 1 every second.
+uint8 timebase_1s(void)
+{
+	static uint16 time = 0;
+	
+	time++;
+	if(time >= 999)
+	{
+		time = 0;
+		return 1;
+	}
+	
+	return 0;
+}
+
+//Call this function in the 1kHz FSM. It will return 1 every 100ms.
+uint8 timebase_100ms(void)
+{
+	static uint16 time = 0;
+	
+	time++;
+	if(time >= 99)
+	{
+		time = 0;
+		return 1;
+	}
+	
+	return 0;
 }

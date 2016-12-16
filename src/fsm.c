@@ -25,7 +25,7 @@
 *****************************************************************************
 	[Change log] (Convention: YYYY-MM-DD | author | comment)
 	* 2016-09-20 | jfduval | Added proper header
-	*
+	* 2016-12-16 | jfduval | Upgraded LED driver
 ****************************************************************************/
 
 //****************************************************************************
@@ -45,7 +45,7 @@ uint8 fade_on_off = 0;
 uint16 button_off_counter = 0;
 uint8 status_ok = 0;
 struct flexsea_batt_s flexsea_batt;
-	
+
 //****************************************************************************
 // Private Function Prototype(s):
 //****************************************************************************  
@@ -73,7 +73,7 @@ void battery_board_fsm(void)
                 fsm_counter = 0;
                 fsm_state = FSM_STATE_POWER_ON;
             }
-            GREEN_LED_PWM(fsm_counter * 4);
+            rgbLedSet(0, fsm_counter >> 2, 0);
             break;
         
         //User still pressing? Display status.
@@ -117,27 +117,7 @@ void battery_board_fsm(void)
             SW_PSOC_Write(OUTPUT_ON);
             
             //Green LED fade on & off:
-            if(fade_on_off == 0)
-            {
-                //Fade ON
-                fsm_counter++;
-                if(fsm_counter >= FADE_ON_OFF_TIME)
-                {
-                    //fsm_counter = 0;
-                    fade_on_off = 1;
-                }
-            }
-            else
-            {
-                //Fade OFF
-                fsm_counter--;
-                if(fsm_counter <= 0)
-                {
-                    //fsm_counter = 0;
-                    fade_on_off = 0;
-                }
-            }
-            GREEN_LED_PWM(fsm_counter * 4); 
+			rgbLedSet(0, rgbLedGetFade(), 0);
             
             //Is the user pressing on the button?
             if(button_pressed())
@@ -196,7 +176,7 @@ void battery_board_fsm(void)
                 fsm_counter = 0;
                 fsm_state = FSM_STATE_OFF;
             }
-            RED_LED_PWM(fsm_counter * 4);
+            rgbLedSet(fsm_counter >> 2, 0, 0);
             
             break;
             
@@ -211,7 +191,7 @@ void battery_board_fsm(void)
             break;
             
         default:
-            LED_B_Write(1);     //Should not happen
+            rgbLedSet(0, 0, MAX_PWM);     //Should not happen
             break;
     }
 }
@@ -304,15 +284,14 @@ static void quick_led_flash(uint8 color)
 {
 	if(color == RED)
 	{
- 		GREEN_LED_PWM(MIN_PWM);    //Green OFF
         fsm_counter++;
         if(fsm_counter < FSM_STATE1_LED_ONTIME)
         {
-            RED_LED_PWM(MAX_PWM);
+			rgbLedSet(MAX_PWM, 0, 0);
         }
         else if((fsm_counter >= FSM_STATE1_LED_ONTIME) && (fsm_counter < FSM_STATE1_LED_PERIOD))
         {
-            RED_LED_PWM(MIN_PWM);
+			rgbLedSet(MIN_PWM, 0, 0);
         }
         else
         {
@@ -321,15 +300,14 @@ static void quick_led_flash(uint8 color)
 	}
 	else if(color == GREEN)    
 	{
-	    RED_LED_PWM(MIN_PWM);    //Red OFF
 	    fsm_counter++;
 	    if(fsm_counter < FSM_STATE1_LED_ONTIME)
 	    {
-	        GREEN_LED_PWM(MAX_PWM);
+			rgbLedSet(0, MAX_PWM, 0);
 	    }
 	    else if((fsm_counter >= FSM_STATE1_LED_ONTIME) && (fsm_counter < FSM_STATE1_LED_PERIOD))
 	    {
-	        GREEN_LED_PWM(MIN_PWM);
+			rgbLedSet(0, MIN_PWM, 0);
 	    }
 	    else
 	    {
@@ -345,9 +323,7 @@ static void fsm_transition_to_ON(void)
     fsm_state = FSM_STATE_ON;
     fade_on_off = 0;
     //By default, LEDs OFF:
-    PWM_1_WriteCompare(MIN_PWM);
-    PWM_2_WriteCompare(MIN_PWM);
-    LED_B_Write(0);
+	rgbLedSet(MIN_PWM, MIN_PWM, MIN_PWM);
     //Button off counter starts at 0:
     button_off_counter = 0;    
 }
@@ -358,5 +334,5 @@ static void fsm_transition_to_POWER_OFF(void)
 	fsm_counter = 0;
     button_off_counter = 0;
     fsm_state = FSM_STATE_POWER_OFF;   
-    GREEN_LED_PWM(MIN_PWM);  
+	rgbLedSet(MIN_PWM, MIN_PWM, MIN_PWM);
 }

@@ -1,6 +1,6 @@
 /****************************************************************************
 	[Project] FlexSEA: Flexible & Scalable Electronics Architecture
-	[Sub-project] 'battery': Battery Protection & Monitoring
+	[Sub-project] 'flexsea-battery' Battery Protection & Monitoring
 	Copyright (C) 2016 Dephy, Inc. <http://dephy.com/>
 
 	This program is free software: you can redistribute it and/or modify
@@ -16,16 +16,15 @@
 	You should have received a copy of the GNU General Public License
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *****************************************************************************
-	[Lead developper] Jean-Francois (JF) Duval, jfduval at dephy dot com.
+	[Lead developper] Jean-Francois Duval, jfduval at dephy dot com.
 	[Origin] Based on Jean-Francois Duval's work at the MIT Media Lab 
 	Biomechatronics research group <http://biomech.media.mit.edu/>
-	[Contributors] 
+	[Contributors]
 *****************************************************************************
-	[This file] isr_callbacks: ISR code placed here rather than in auto 
-	generated files
+	[This file] RGB LED: Onboard LED Driver that supports fading
 *****************************************************************************
 	[Change log] (Convention: YYYY-MM-DD | author | comment)
-	* 2016-09-20 | jfduval | Added proper header
+	* 2016-12-15 | jfduval | Copied from Execute
 	*
 ****************************************************************************/
 
@@ -34,11 +33,19 @@
 //****************************************************************************
 
 #include "main.h"
-#include "isr_callbacks.h"
-#include "misc.h"
+#include "rgb_led.h"
 
 //****************************************************************************
 // Variable(s)
+//****************************************************************************
+
+uint8 rgbFade = 0;
+
+//RGB LED:
+uint8 rgbPeriodR = 0, rgbPeriodG = 0, rgbPeriodB = 0;
+
+//****************************************************************************
+// Private Function Prototype(s):
 //****************************************************************************
 
 
@@ -46,35 +53,98 @@
 // Public Function(s)
 //****************************************************************************
 
-//Timer 1 ISR:
-CY_ISR(isr_t1_Interrupt_Callback)
+//Use this to set a new value
+void rgbLedSet(uint8 r, uint8 g, uint8 b)
 {
-	//Clear interrupt
-	Timer_1_ReadStatusRegister();
-	isr_t1_ClearPending();
-	
-	t1_new_value = 1;
+	rgbPeriodR = r;
+	rgbPeriodG = g;
+	rgbPeriodB = b;
 }
 
-//Sequencing ADC ISR:
-CY_ISR(ADC_SAR_Seq_1_ISR_Callback)
+//Timer-based RGB driver - w/ fading.
+//Call this function at 10kHz
+void rgbLedRefresh(void)
 {
-	uint32 intr_status;
-	static uint8 ch = 0;
+	static uint8 cnt = 0;
+	static uint8 rON = 0, gON = 0, bON = 0;
 	
-	//Read interrupt status register
-	intr_status = ADC_SAR_Seq_1_SAR_INTR_REG;
-	
-	//Copy data
-	for(ch = 0; ch <= MAX_ADC_CH; ch++)
+	//New cycle?
+	if(!cnt)
 	{
-		adc_res[ch] = ADC_SAR_Seq_1_GetResult16(ch);
+		//All ON
+		LED_R_Write(LED_ON);
+		LED_G_Write(LED_ON);
+		LED_B_Write(LED_ON);
+		rON = 1;
+		gON = 1;
+		bON = 1;
 	}
-	//ToDo: optimize by reading from register
+	
+	//Ready to turn OFF?
+	
+	if(rON && cnt >= rgbPeriodR)
+	{
+		LED_R_Write(LED_OFF);
+		rON = 0;
+	}
+	
+	if(gON && cnt >= rgbPeriodG)
+	{
+		LED_G_Write(LED_OFF);
+		gON = 0;
+	}
+	
+	if(bON && cnt >= rgbPeriodB)
+	{
+		LED_B_Write(LED_OFF);
+		bON = 0;
+	}
+	
+	//Increment counter. It will eventually roll over.
+	cnt += 2;
+}
 
-	//Clear handled interrupt:
-	//ADC_SAR_Seq_1_IRQ_ClearPending();
-	ADC_SAR_Seq_1_SAR_INTR_REG = intr_status;
+//Accessor
+uint8 rgbLedGetFade(void)
+{
+	return rgbFade;
+}
+
+//Call this function every ms. It will update the rgbFade variable.
+void rgbLedRefreshFade(void)
+{
+	static uint16 fade = 0, val = 0;
+
+	val++;
+	val %= FADE_PERIOD_MS;
+	
+	if(val > FADE_MIDPOINT-2)
+		fade = FADE_PERIOD_MS - val;
+	else
+		fade = val;
+	
+	rgbFade = (uint8) (fade>>1 & 0xFF);
+}
+
+//Test code
+void rgbLedRefresh_testcode_blocking(void)
+{
+	uint8 div = 0;
+	
+	while(1)
+	{		
+		rgbLedSet(0, rgbFade, 0);
+		rgbLedRefresh();
+		CyDelayUs(100);
+		
+		div++;
+		div %= 10;
+		if(!div)
+		{
+			//1ms
+			rgbLedRefreshFade();
+		}
+	}
 }
 
 //****************************************************************************

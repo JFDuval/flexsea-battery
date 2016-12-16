@@ -42,8 +42,7 @@
 // Structure(s)
 //****************************************************************************	
 	
-extern uint8 flag_tb_1ms;
-extern uint8 flag_tb_100ms;
+extern volatile uint8 t1_time_share, t1_new_value;
 extern uint16 led_period;
 extern uint8 led_mode;
 	
@@ -52,7 +51,8 @@ extern uint8 led_mode;
 //****************************************************************************
 
 void init_peripherals(void);
-
+uint8 timebase_1s(void);
+uint8 timebase_100ms(void);
 void uint32_to_bytes(uint32_t x, uint8_t *b0, uint8_t *b1, uint8_t *b2, uint8_t *b3);
 void uint16_to_bytes(uint32_t x, uint8_t *b0, uint8_t *b1);
 
