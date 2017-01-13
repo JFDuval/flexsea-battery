@@ -21,60 +21,42 @@
 	Biomechatronics research group <http://biomech.media.mit.edu/>
 	[Contributors] 
 *****************************************************************************
-	[This file] main: Main
+	[This file] mem: Emulated EEPROM 
+	generated files
 *****************************************************************************
 	[Change log] (Convention: YYYY-MM-DD | author | comment)
-	* 2016-09-20 | jfduval | Added proper header
+	* 2016-12-19 | jfduval | New file
 	*
 ****************************************************************************/
 
-#ifndef MAIN_H_
-#define MAIN_H_
-	
+#ifndef INC_MEM_H
+#define INC_MEM_H
+
 //****************************************************************************
 // Include(s)
-//****************************************************************************
+//****************************************************************************		
 
-#include <project.h>
-#include <stdlib.h>
-#include "isr_callbacks.h"
-#include "main_fsm.h"
-#include "misc.h"
-#include "sensors.h"
-#include "comm.h"
-#include "fsm.h"
-#include "i2t-current-limit.h"
-#include "rgb_led.h"
-#include "mem.h"
+#include "main.h"
 
 //****************************************************************************
-// Prototype(s):
+// Shared variable(s)
 //****************************************************************************
+
+//****************************************************************************
+// Public Function Prototype(s):
+//****************************************************************************	
+
+void init_mem(void);
 
 //****************************************************************************
 // Definition(s):
+//****************************************************************************	
+
+
 //****************************************************************************
+// Structure(s)
+//****************************************************************************	
 
-//Board Status
-#define BOARD_STATUS_NA       	0
-#define BOARD_STATUS_ALL_GOOD	1
-#define BOARD_STATUS_ERROR      2
 	
-//Reassembles a uint32 from 4 bytes. b0 is the MSB.
-#define BYTES_TO_UINT32(b0,b1,b2,b3)	(((uint32_t)b0 << 24) + \
-										((uint32_t)b1 << 16) + \
-										((uint32_t)b2 << 8) + \
-										((uint32_t)b3))
-
-//Reassembles a uint16 from 2 bytes. b0 is the MSB.
-#define BYTES_TO_UINT16(b0,b1)			(((uint16_t)b0 << 8) + \
-										((uint16_t)b1))
+#endif	//INC_MEM_H
 	
-//Minimalist version of user.h:
-//Enable/Disable sub-modules:
-
-#define USE_I2C1			//Shared memory (EZI2C)
-#define USE_I2T_LIMIT		//I2t current limit
-//#define USE_EEPROM		//EEPROM to save crash source (not programmed)
-	
-#endif // MAIN_H_
