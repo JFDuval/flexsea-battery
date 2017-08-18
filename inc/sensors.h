@@ -70,8 +70,8 @@ void test_vb_filter_blocking(void);
 #define ADC_TEMP				3
 
 //Limits:
-#define VOLTAGE_MIN				15000
-#define VOLTAGE_MAX				52000
+#define VOLTAGE_MIN				20000
+#define VOLTAGE_MAX				55000
 //See I2t-current-limit for the current limit
 #define TEMP_MAX				85
 //Note: should be modified for your application!

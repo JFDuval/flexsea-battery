@@ -62,13 +62,13 @@ int i2t_compute(void);
 //that your sensor can read is 30A and you wan to support 10A continuous, 
 //use (10000 >> I2C_SCALE_DOWN_SHIFT)^2 = 6104. With 10A flowing, your 
 //integrator will stay at 0. Anything above it will increase its count.
-#define I2T_LEAK				6104
+#define I2T_LEAK				2197
 //What current limit do you want?
 //Limit = (TIME_AT_LIMIT_CURR / dt) * ( (CURR_LIMIT>>I2C_SCALE_DOWN_SHIFT)^2 - I2T_LEAK )
 //Ex.: 15A for 10s 
 //	Limit = (10s / 100ms) * ( (15000mA/128)^2 - 6104)
 //	Limit = 100 * ( 13733 - 6104) = 762891
-#define I2T_LIMIT				762891
+#define I2T_LIMIT				117188
 #define I2T_WARNING				(0.8*I2T_LIMIT)
 
 //How long will it last at 11A?
